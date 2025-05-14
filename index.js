@@ -44,7 +44,21 @@ app.post("/merge-audio", async (req, res) => {
   console.log("🟡 Incoming request");
   console.log("📦 Raw body:", req.body);
 
-  const { files, outputName } = req.body;
+  const { outputName } = req.body;
+
+const cloudinaryFolder = "FFmpeg-converter"; // or your folder name
+const { resources } = await cloudinary.api.resources({
+  type: "upload",
+  prefix: cloudinaryFolder + "/",
+  resource_type: "video",
+  max_results: 100
+});
+
+const files = resources
+  .filter(file => file.format === "mp3")
+  .sort((a, b) => new Date(a.created_at) - new Date(b.created_at))
+  .map(file => file.secure_url);
+
 
   const silenceMs = config.silenceMs || 300;
   const fadeMs = config.fadeMs || 150;
