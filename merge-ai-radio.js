@@ -101,7 +101,7 @@ router.post("/", async (req, res) => {
     const inputArgs = finalInputs.map((file) => `-i "${file}"`).join(" ");
     const concatFilter = `concat=n=${finalInputs.length}:v=0:a=1${compressor ? "," + compressor : ""}`;
 
-    const ffmpegCmd = `ffmpeg ${inputArgs} -filter_complex "${concatFilter}" -acodec libmp3lame -y "${finalPath}"`;
+    const ffmpegCmd = `ffmpeg ${inputArgs} -filter_complex "${concatFilter}" -acodec libmp3lame -b:a 192k -ar 24000 -y "${finalPath}"`;
     console.log("🎬 Running FFmpeg with:", ffmpegCmd);
 
     await new Promise((resolve, reject) => {
